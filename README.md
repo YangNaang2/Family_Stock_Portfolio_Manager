@@ -2,8 +2,7 @@
 
 파이썬과 PyQt5를 활용하여 가족 구성원별 주식 자산을 실시간으로 관리하고 시각화하는 데스크톱 애플리케이션입니다. 네이버 금융의 실시간 데이터를 크롤링하여 정확한 수익률과 시장 지수를 제공합니다.
 
-![main_screen](https://via.placeholder.com/800x450?text=Family+Stock+Manager+UI+Screenshot) 
-*(프로그램 실행 화면 캡처본을 여기에 업로드 후 링크를 교체하세요)*
+![main_screen](https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EB%A9%94%EC%9D%B8%ED%99%94%EB%A9%B4.png) 
 
 ## ✨ 주요 기능
 
