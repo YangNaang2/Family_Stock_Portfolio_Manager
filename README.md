@@ -1,4 +1,11 @@
 # 👨‍👩‍👧‍👦 가족 주식 관리 시스템 Pro (Family Stock Portfolio Manager)
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/PyQt5-41CD52?style=flat-square&logo=qt&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Matplotlib-11557c?style=flat-square"/>
+  <img src="https://img.shields.io/badge/BeautifulSoup4-8B0000?style=flat-square"/>
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square"/>
+</p>
 
 파이썬과 PyQt5를 활용하여 가족 구성원별 주식 자산을 실시간으로 관리하고 시각화하는 데스크톱 애플리케이션입니다. 네이버 금융의 실시간 데이터를 크롤링하여 정확한 수익률과 시장 지수를 제공합니다.
 
