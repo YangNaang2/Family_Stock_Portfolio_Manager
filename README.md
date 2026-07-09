@@ -22,22 +22,15 @@
 - **💾 데이터 영구 저장**: 모든 데이터는 `family_stocks.json` 파일에 안전하게 기록되어 프로그램을 재시작해도 유지됩니다.
 - **🕒 실시간 동기화**: 1초 단위 실시간 시계와 새로고침 기능을 통해 최신 금융 정보를 유지합니다.
 
-## 🛠 기술 스택
-
-- **Language**: Python 3.12 (64-bit)
-- **Library**: 
-  - `PyQt5`: GUI 레이아웃 및 이벤트 처리
-  - `Matplotlib`: 자산 비중 시각화(Pie Chart)
-  - `Requests` & `BeautifulSoup4`: 네이버 금융 실시간 데이터 크롤링
-  - `JSON`: 경량 데이터 저장 및 관리
 
 ## 🚀 시작하기
 
-### 1. 필수 라이브러리 설치
+### 1. 필수 라이브러리 설치 후 실행
 이 프로그램은 외부 라이브러리를 사용합니다. 터미널에서 아래 명령어를 입력하여 설치해 주세요.
 
 ```bash
 pip install PyQt5 requests beautifulsoup4 matplotlib
+python main.py
 ```
 
 주식관리/
