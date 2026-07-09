@@ -11,6 +11,15 @@
 
 ![main_screen](https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EB%A9%94%EC%9D%B8%ED%99%94%EB%A9%B4.png) 
 
+### 📂 프로젝트 구조
+```text
+주식관리/
+├── main.py            # 프로그램의 메인 실행 파일 및 GUI 로직
+├── scraper.py         # 네이버 금융 실시간 주가 및 시장 지수 크롤링 엔진
+├── data_manager.py    # 주식 데이터(JSON) 로드 및 저장 관리 모듈
+├── .gitignore         # 깃허브 업로드 시 제외할 파일 설정 (보안용)
+└── family_stocks.json # 가족 주식 데이터가 저장되는 파일 (자동 생성)
+
 ## ✨ 주요 기능
 
 - **📊 실시간 시장 대시보드**: 상단 인덱스 바를 통해 KOSPI, KOSDAQ 지수 및 원/달러 환율과 전일 대비 등락률을 실시간으로 확인합니다.
@@ -25,16 +34,10 @@
 
 ## 🚀 시작하기
 
-### 1. 필수 라이브러리 설치 후 실행
-이 프로그램은 외부 라이브러리를 사용합니다. 터미널에서 아래 명령어를 입력하여 설치해 주세요.
+### 필수 라이브러리 설치 후 실행
+터미널에서 아래 명령어를 입력하여 설치 후 실행해 주세요.
 
 ```bash
 pip install PyQt5 requests beautifulsoup4 matplotlib
 python main.py
 ```
-
-주식관리/
-├── main.py            # 프로그램 실행 및 GUI 로직
-├── scraper.py         # 실시간 주가 및 시장 지수 크롤링 엔진
-├── data_manager.py    # JSON 데이터 로드 및 저장 모듈
-└── family_stocks.json # 주식 데이터 저장 파일 (자동 생성)
