@@ -23,18 +23,32 @@
 
 ## ✨ 주요 기능
 
-- **📊 실시간 시장 대시보드**: 상단 인덱스 바를 통해 KOSPI, KOSDAQ 지수 및 원/달러 환율과 전일 대비 등락률을 실시간으로 확인합니다.
-- **👨‍👩‍👧‍👦 가족별 포트폴리오 관리**: 드롭다운 메뉴를 통해 아빠, 엄마, 나, 동생 등 가족 구성원별 독립된 자산 현황을 조회합니다.
-- **📈 스마트 주식 관리 (CRUD)**:
-  - **추가**: 신규 종목 등록 및 기존 보유 종목의 추가 매수(물타기/불타기) 기능을 지원하며, 가중평균 평단가를 자동 계산합니다.
-  - https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EA%B8%B0%EC%A1%B4%EC%A3%BC%EC%8B%9D%EC%B6%94%EA%B0%80.png
-  - https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EC%8B%A0%EA%B7%9C%EC%A3%BC%EC%8B%9D%EC%9E%85%EB%A0%A5.png
-  - **수정/삭제**: 잘못 입력된 평단가나 수량을 직관적인 팝업창에서 즉시 수정하거나 삭제할 수 있습니다.
-  - https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EC%A3%BC%EC%8B%9D%EC%88%98%EC%A0%95.png
-- **🍰 자산 비중 시각화**: Matplotlib 기반의 파이 차트를 통해 구성원별 포트폴리오 비중을 한눈에 파악합니다.
-- **💾 데이터 영구 저장**: 모든 데이터는 `family_stocks.json` 파일에 안전하게 기록되어 프로그램을 재시작해도 유지됩니다.
-- **🕒 실시간 동기화**: 1초 단위 실시간 시계와 새로고침 기능을 통해 최신 금융 정보를 유지합니다.
+### 📊 실시간 시장 대시보드
+- 상단 인덱스 바를 통해 **KOSPI, KOSDAQ 지수** 및 **원/달러 환율**과 전일 대비 등락률을 실시간으로 확인합니다.
 
+### 👨‍👩‍👧‍👦 가족별 포트폴리오 관리
+- 드롭다운 메뉴를 통해 아빠, 엄마, 나, 동생 등 가족 구성원별 독립된 자산 현황을 조회합니다.
+
+### 📈 스마트 주식 관리 (CRUD)
+- **추가**: 신규 종목 등록 및 기존 보유 종목의 추가 매수(물타기/불타기) 기능을 지원하며, 가중평균 평단가를 자동 계산합니다.
+  <p align="left">
+    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EC%8B%A0%EA%B7%9C%EC%A3%BC%EC%8B%9D%EC%9E%85%EB%A0%A5.png" width="45%" />
+    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EA%B8%B0%EC%A1%B4%EC%A3%BC%EC%8B%9D%EC%B6%94%EA%B0%80.png" width="45%" />
+  </p>
+
+- **수정/삭제**: 잘못 입력된 평단가나 수량을 직관적인 팝업창에서 즉시 수정하거나 삭제할 수 있습니다.
+  <p align="left">
+    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EC%A3%BC%EC%8B%9D%EC%88%98%EC%A0%95.png" width="45%" />
+  </p>
+
+### 🍰 자산 비중 시각화
+- Matplotlib 기반의 파이 차트를 통해 구성원별 포트폴리오 비중을 한눈에 파악합니다.
+
+### 💾 데이터 영구 저장
+- 모든 데이터는 `family_stocks.json` 파일에 안전하게 기록되어 프로그램을 재시작해도 유지됩니다.
+
+### 🕒 실시간 동기화
+- 1초 단위 실시간 시계와 새로고침 기능을 통해 최신 금융 정보를 유지합니다.
 
 ## 🚀 시작하기
 
