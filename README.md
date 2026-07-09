@@ -18,7 +18,7 @@
 
 ## 🛠 기술 스택
 
-- **Language**: Python 3.12 (64-bit 권장)
+- **Language**: Python 3.12 (64-bit)
 - **Library**: 
   - `PyQt5`: GUI 레이아웃 및 이벤트 처리
   - `Matplotlib`: 자산 비중 시각화(Pie Chart)
@@ -32,6 +32,7 @@
 
 ```bash
 pip install PyQt5 requests beautifulsoup4 matplotlib
+```
 
 주식관리/
 ├── main.py            # 프로그램 실행 및 GUI 로직
