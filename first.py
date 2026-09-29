@@ -1,217 +1,161 @@
-import os
-import json
-import requests
-from bs4 import BeautifulSoup
+"""기존 터미널 메뉴. GUI와 같은 시세·계산·안전 저장 모듈을 사용한다."""
 
-# 데이터가 저장될 파일 이름
-DATA_FILE = "family_stocks.json"
+import sys
 
-def get_current_price(code):
-    """네이버 금융에서 종목 코드를 이용해 실시간 현재가를 가져오는 함수"""
-    url = f"https://finance.naver.com/item/main.naver?code={code}"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-    
-    try:
-        response = requests.get(url, headers=headers)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        # 네이버 금융에서 현재가가 위치한 HTML 태그 추출
-        today_div = soup.find('div', class_='today')
-        price_text = today_div.find('span', class_='blind').text
-        return int(price_text.replace(',', ''))
-    except Exception:
-        # 네트워크 오류나 종목 코드가 잘못된 경우 None 반환
-        return None
+from data_manager import DataError, load_data, save_data
+from portfolio import build_snapshot
+from trading import record_buy, record_sell, record_dividend, remove_holding, summarize_activity
+from scraper import get_current_price
 
-def load_data():
-    """프로그램 시작 시 JSON 파일에서 데이터를 읽어오는 함수"""
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    else:
-        # 파일이 없으면 사용할 초기 데이터 구조 (테스트용 종목코드 및 매수단가 적용)
-        return {
-            "아빠": [
-                {"name": "삼성전자", "code": "005930", "purchase_price": 72000, "quantity": 100},
-                {"name": "현대차", "code": "005380", "purchase_price": 240000, "quantity": 50}
-            ],
-            "엄마": [
-                {"name": "카카오", "code": "035720", "purchase_price": 48000, "quantity": 200},
-                {"name": "NAVER", "code": "035420", "purchase_price": 190000, "quantity": 30}
-            ],
-            "나": [
-                {"name": "SK하이닉스", "code": "000660", "purchase_price": 160000, "quantity": 40}
-            ]
-        }
 
-def save_data(data):
-    """데이터가 변경될 때마다 JSON 파일에 저장하는 함수"""
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+def amount(value, suffix="원", precision=2):
+    return "미확인" if value is None else f"{value:,.{precision}f}{suffix}"
 
 
 def display_portfolio(member_name, family_stocks):
-    """1. 실시간 주가를 반영하여 수익률과 총 자산을 출력하는 함수"""
-    print(f"\n=== 📊 {member_name}의 주식 포트폴리오 (실시간 조회) ===")
     stocks = family_stocks.get(member_name, [])
-    
     if not stocks:
         print("등록된 주식 정보가 없습니다.")
         return
+    print(f"\n=== {member_name}의 포트폴리오 · 네이버 시세 조회 ===")
+    quotes = {code: get_current_price(code) for code in {stock["code"] for stock in stocks}}
+    snapshot = build_snapshot(family_stocks, quotes, member_name)
+    for holding in snapshot.holdings:
+        print(f"{holding.name} ({holding.code}) · {holding.quantity:,}주 | "
+              f"평균 매수가 {amount(holding.purchase_price)} | 현재가 {amount(holding.current_price)} | "
+              f"평가손익 {amount(holding.profit)} | 수익률 {amount(holding.roi, '%')}")
+    known = snapshot.missing_count < len(snapshot.holdings)
+    print(f"총 매수금액: {amount(snapshot.total_cost)}")
+    if snapshot.missing_count:
+        print(f"시세 미확인 {snapshot.missing_count}건 제외 · 평가금액·손익·수익률은 조회된 종목만 반영합니다.")
+    print(f"평가금액: {amount(snapshot.market_value if known else None)} | "
+          f"평가손익: {amount(snapshot.profit if known else None)} | 수익률: {amount(snapshot.roi, '%')}")
+    print("미실현 손익 · 매도 비용 미포함")
+    summary = summarize_activity(family_stocks, member_name)
+    print(f"누적 실현손익: {amount(summary['realized_profit'])} | 순배당: {amount(summary['dividends'])}")
 
-    total_purchase_val = 0  # 총 매수 금액
-    total_current_val = 0   # 총 평가 금액
 
-    print(f"{'주식명(코드)':<14} | {'매수단가':<10} | {'현재가':<10} | {'수량':<5} | {'평가손익':<12} | {'수익률':<7}")
-    print("-" * 85)
-    
-    for stock in stocks:
-        code = stock['code']
-        # 실시간 가격 가져오기 (인터넷 안되면 기존 매수단가로 대체해 에러 방지)
-        current_price = get_current_price(code)
-        if current_price is None:
-            current_price = stock['purchase_price']
-            price_status = "(조회실패)"
-        else:
-            price_status = ""
-
-        purchase_price = stock['purchase_price']
-        qty = stock['quantity']
-
-        buy_amount = purchase_price * qty       # 이 종목을 산 총 금액
-        current_amount = current_price * qty    # 이 종목의 현재 가치
-        
-        profit = current_amount - buy_amount    # 평가손익
-        # 수익률 계산: (평가손익 / 매수금액) * 100
-        roi = (profit / buy_amount) * 100 if buy_amount > 0 else 0 
-
-        total_purchase_val += buy_amount
-        total_current_val += current_amount
-
-        # 수익률 양수/음수에 따른 기호 표시
-        roi_sign = "+" if roi > 0 else ""
-        
-        stock_label = f"{stock['name']}({code})"
-        print(f"{stock_label:<14} | {purchase_price:>10,}원 | {current_price:>10,}원{price_status} | {qty:>4}주 | {profit:>11,}원 | {roi_sign}{roi:>6.2f}%")
-        
-    total_profit = total_current_val - total_purchase_val
-    total_roi = (total_profit / total_purchase_val) * 100 if total_purchase_val > 0 else 0
-    total_roi_sign = "+" if total_profit > 0 else ""
-
-    print("-" * 85)
-    print(f"💰 총 매수금액: {total_purchase_val:,}원 ➡️ 총 평가금액: {total_current_val:,}원")
-    print(f"📈 총 평가손익: {total_profit:,}원 ({total_roi_sign}{total_roi:.2f}%)")
+def persist(candidate, previous):
+    try:
+        save_data(candidate)
+    except (DataError, OSError) as exc:
+        print(f"저장 실패 · 변경 사항을 적용하지 않았습니다: {exc}")
+        return previous
+    print("저장 완료")
+    return candidate
 
 
 def add_stock(member_name, family_stocks):
-    """2. 주식을 새로 추가하는 함수 (종목코드와 매수단가 입력)"""
-    print(f"\n➕ [{member_name}] 주식 추가하기")
-    name = input("👉 주식 이름을 입력하세요 (예: 삼성전자): ").strip()
-    code = input("👉 6자리 종목코드를 입력하세요 (예: 005930): ").strip()
-    
-    if not name or len(code) != 6:
-        print("❌ 주식 이름이나 종목코드(6자리)가 올바르지 않습니다.")
-        return
-
+    print(f"\n[{member_name}] 주식 매수 기록 추가 · 같은 종목코드는 합산합니다.")
+    name = input("종목명: ").strip()
+    code = input("6자리 종목코드: ").strip()
+    price = input("매수 단가(원): ").strip()
     try:
-        purchase_price = int(input("👉 평단가(내가 산 가격)를 입력하세요: "))
-        quantity = int(input("👉 보유 수량(주)을 입력하세요: "))
-    except ValueError:
-        print("❌ 가격과 수량은 숫자로만 입력해야 합니다.")
-        return
-
-    stocks = family_stocks[member_name]
-    
-    # 이미 가지고 있는 종목코드라면 평단가 평점 및 수량 누적 계산
-    for stock in stocks:
-        if stock['code'] == code:
-            old_total = stock['purchase_price'] * stock['quantity']
-            new_total = purchase_price * quantity
-            stock['quantity'] += quantity
-            # 가중평균을 이용한 새로운 매수단가(평단가) 계산
-            stock['purchase_price'] = int((old_total + new_total) / stock['quantity'])
-            print(f"✅ 기존 보유 종목입니다. 수량이 더해지고 평균 매수단가가 {stock['purchase_price']:,}원으로 갱신되었습니다.")
-            save_data(family_stocks)
-            return
-
-    stocks.append({"name": name, "code": code, "purchase_price": purchase_price, "quantity": quantity})
-    save_data(family_stocks)
-    print(f"✅ [{name}] 주식이 성공적으로 등록되었습니다.")
+        quantity = int(input("매수 수량(주): "))
+        candidate = record_buy(family_stocks, member_name, name, code, price, quantity)
+    except ValueError as exc:
+        print(f"입력 확인: {exc}")
+        return family_stocks
+    return persist(candidate, family_stocks)
 
 
 def delete_stock(member_name, family_stocks):
-    """3. 등록된 주식을 삭제하는 함수"""
-    print(f"\n❌ [{member_name}] 주식 삭제하기")
-    stocks = family_stocks[member_name]
-    
+    stocks = build_snapshot(family_stocks, {}, member_name).holdings
     if not stocks:
         print("삭제할 주식이 없습니다.")
-        return
-
-    print("현재 보유 주식 목록:")
-    for i, stock in enumerate(stocks, 1):
-        print(f" [{i}] {stock['name']}({stock['code']}) - {stock['quantity']}주")
-    
+        return family_stocks
+    for index, stock in enumerate(stocks, 1):
+        print(f"{index}. {stock.name} ({stock.code}) · {stock.quantity:,}주")
     try:
-        choice = int(input("👉 삭제할 주식의 번호를 선택하세요: ")) - 1
-        if 0 <= choice < len(stocks):
-            removed = stocks.pop(choice)
-            save_data(family_stocks)
-            print(f"✅ [{removed['name']}] 주식이 완전히 삭제되었습니다.")
-        else:
-            print("❌ 잘못된 번호입니다.")
-    except ValueError:
-        print("❌ 숫자를 입력해주세요.")
+        index = int(input("삭제할 주식 번호: ")) - 1
+        if not 0 <= index < len(stocks):
+            raise ValueError("목록에 있는 번호를 선택해 주세요.")
+    except ValueError as exc:
+        print(f"입력 확인: {exc}")
+        return family_stocks
+    stock = stocks[index]
+    if input(f"{stock.name} ({stock.code})의 보유 기록을 삭제할까요? 매도 거래로 기록되지 않습니다. [y/N]: ").strip().lower() != "y":
+        return family_stocks
+    try:
+        candidate = remove_holding(family_stocks, member_name, stock.code)
+    except ValueError as exc:
+        print(f"삭제 기록 확인: {exc}")
+        return family_stocks
+    return persist(candidate, family_stocks)
+
+
+def sell_stock(member_name, family_stocks):
+    try:
+        code = input("매도할 종목코드: ").strip()
+        price = input("매도 단가(원): ").strip()
+        quantity = int(input("매도 수량: "))
+        fee = input("수수료(원, Enter=0): ").strip() or "0"
+        tax = input("세금(원, Enter=0): ").strip() or "0"
+        candidate = record_sell(family_stocks, member_name, code, price, quantity, fee=fee, tax=tax)
+    except ValueError as exc:
+        print(f"입력 확인: {exc}")
+        return family_stocks
+    return persist(candidate, family_stocks)
+
+
+def add_dividend(member_name, family_stocks):
+    try:
+        code = input("배당 종목코드: ").strip()
+        gross = input("세전 배당액(원): ").strip()
+        tax = input("원천징수 세금(원, Enter=0): ").strip() or "0"
+        candidate = record_dividend(family_stocks, member_name, code, gross, tax=tax)
+    except ValueError as exc:
+        print(f"입력 확인: {exc}")
+        return family_stocks
+    return persist(candidate, family_stocks)
 
 
 def member_menu(member_name, family_stocks):
-    """가족 구성원 세부 메뉴"""
     while True:
-        print(f"\n⚙️ [{member_name}]님 관리 메뉴")
-        print("1. 실시간 주식 포트폴리오 조회 및 수익률 확인")
-        print("2. 주식 매수 기록 추가")
-        print("3. 주식 삭제")
-        print("0. 메인 화면으로 돌아가기")
-        
-        choice = input("\n👉 원하시는 작업 번호를 선택하세요: ")
-        
-        if choice == '1':
+        print(f"\n[{member_name}]  1. 포트폴리오 조회  2. 매수 기록 추가  3. 보유 기록 삭제  4. 매도 기록  5. 배당 기록  0. 돌아가기")
+        choice = input("작업 번호: ").strip()
+        if choice == "1":
             display_portfolio(member_name, family_stocks)
-        elif choice == '2':
-            add_stock(member_name, family_stocks)
-        elif choice == '3':
-            delete_stock(member_name, family_stocks)
-        elif choice == '0':
-            break
+        elif choice == "2":
+            family_stocks = add_stock(member_name, family_stocks)
+        elif choice == "3":
+            family_stocks = delete_stock(member_name, family_stocks)
+        elif choice == "4":
+            family_stocks = sell_stock(member_name, family_stocks)
+        elif choice == "5":
+            family_stocks = add_dividend(member_name, family_stocks)
+        elif choice == "0":
+            return family_stocks
         else:
-            print("❌ 잘못된 번호입니다.")
+            print("목록에 있는 번호를 선택해 주세요.")
 
 
 def main():
-    # 프로그램 시작 시 파일에서 데이터 불러오기
-    family_stocks = load_data()
-    
+    try:
+        family_stocks = load_data()
+    except (DataError, OSError) as exc:
+        print(f"포트폴리오를 열 수 없습니다: {exc}")
+        return 1
     while True:
-        print("\n=== 🏠 가족 주식 관리 프로그램 (실시간 연동형) ===")
-        members = list(family_stocks.keys())
-        
-        for i, member in enumerate(members, 1):
-            print(f"{i}. {member}")
-        print("0. 프로그램 종료")
-
-        choice = input("\n👉 관리할 가족 번호를 선택하세요: ")
-
-        if choice == '0':
-            print("프로그램을 종료합니다. 자산이 날마다 증식하기를 바랍니다!")
-            break
-
+        print("\n=== 가족 주식 관리 프로그램 ===")
+        members = list(family_stocks)
+        for index, member in enumerate(members, 1):
+            print(f"{index}. {member}")
+        choice = input("가족 번호 (0: 종료): ").strip()
+        if choice == "0":
+            return 0
         try:
-            idx = int(choice) - 1
-            if 0 <= idx < len(members):
-                member_menu(members[idx], family_stocks)
-            else:
-                print("❌ 목록에 있는 번호를 선택해주세요.")
-        except ValueError:
-            print("❌ 숫자를 입력해주세요.")
+            index = int(choice) - 1
+            if not 0 <= index < len(members):
+                raise ValueError("목록에 있는 번호를 선택해 주세요.")
+        except ValueError as exc:
+            print(f"입력 확인: {exc}")
+            continue
+        family_stocks = member_menu(members[index], family_stocks)
+
 
 if __name__ == "__main__":
-    main()
+    try:
+        sys.exit(main())
+    except (KeyboardInterrupt, EOFError):
+        print("\n프로그램을 종료합니다.")
