@@ -1,79 +1,156 @@
-# 👨‍👩‍👧‍👦 가족 주식 관리 시스템 Pro (Family Stock Portfolio Manager)
-<p align="left">
-  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white"/>
-  <img src="https://img.shields.io/badge/PyQt5-41CD52?style=flat-square&logo=qt&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Matplotlib-11557c?style=flat-square"/>
-  <img src="https://img.shields.io/badge/BeautifulSoup4-8B0000?style=flat-square"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square"/>
-</p>
+# 가족 주식 포트폴리오 관리기 · Family Folio
 
-## 👨‍💻 프로젝트 동기
+가족 구성원별 **보유 주식, 매수·매도·배당, 목표 비중, 자산 변화**를 관리하는 Python / PyQt5 데스크톱 앱입니다.
+가족에게 보유 수량과 평단가를 반복해서 물어보던 불편에서 시작한 프로젝트를 함께 사용하는 투자 기록 도구로 확장했습니다.
 
-<div align="center">
-  <strong>"저번에 산거 수익률이 지금 얼마지?"</strong>
-</div>
-<div align="center">
-투자를 하다 보면 기술적으로 '지금이 매수 적기'라고 판단되는 순간이 있다.<br>
-나를 포함한 가족 구성원 모두가 각자의 성향에 따라 다양한 종목을 운용하고 있다.<br>
-좋은 매수 타이밍이 올 때마다 매번 가족들에게 메신저를 보내 보유 현황과 평단가를 일일이 물어봐야 했다.<br>
-</div> <br>
+![가족 자산 대시보드 — 가상 데이터](images/dashboard-v3.png)
 
-<div align="center">
+> 모든 예시 화면은 가상 데이터입니다. 실제 시세나 가족의 실제 보유 내역이 아닙니다.
 
-> **"가족들의 전체 주식 현황을 실시간으로 파악하고 있다면 훨씬 스마트하게 관리할 수 있지 않을까?"**
+## 실행
 
-</div>
-
-그렇기에 파이썬과 PyQt5를 활용하여 가족 구성원별 주식 자산을 실시간으로 관리하고 시각화하는 데스크톱 애플리케이션을 개발하였다.<br>
-네이버 금융의 실시간 데이터를 크롤링하여 정확한 수익률과 시장 지수를 제공한다.
-
-![main_screen](https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/blob/main/images/%EB%A9%94%EC%9D%B8%ED%99%94%EB%A9%B4.png) 
-
-### 📂 프로젝트 구조
-```text
-주식관리/
-├── main.py            # 프로그램의 메인 실행 파일 및 GUI 로직
-├── scraper.py         # 네이버 금융 실시간 주가 및 시장 지수 크롤링 엔진
-├── data_manager.py    # 주식 데이터(JSON) 로드 및 저장 관리 모듈
-├── .gitignore         # 깃허브 업로드 시 제외할 파일 설정 (보안용)
-└── family_stocks.json # 가족 주식 데이터가 저장되는 파일 (자동 생성)
-```
-
-## ✨ 주요 기능
-
-### 📊 실시간 시장 대시보드
-- 상단 인덱스 바를 통해 **KOSPI, KOSDAQ 지수** 및 **원/달러 환율**과 전일 대비 등락률을 실시간으로 확인.
-
-### 👨‍👩‍👧‍👦 가족별 포트폴리오 관리
-- 드롭다운 메뉴를 통해 아빠, 엄마, 나, 동생 등 가족 구성원별 독립된 자산 현황을 조회.
-
-### 📈 스마트 주식 관리 (CRUD)
-- **추가**: 신규 종목 등록 및 기존 보유 종목의 추가 매수(물타기/불타기) 기능을 지원하며, 가중평균 평단가를 자동 계산.
-  <p align="left">
-    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EC%8B%A0%EA%B7%9C%EC%A3%BC%EC%8B%9D%EC%9E%85%EB%A0%A5.png" width="45%" />
-    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EA%B8%B0%EC%A1%B4%EC%A3%BC%EC%8B%9D%EC%B6%94%EA%B0%80.png" width="45%" />
-  </p>
-
-- **수정/삭제**: 잘못 입력된 평단가나 수량을 직관적인 팝업창에서 즉시 수정하거나 삭제할 수 있다.
-  <p align="left">
-    <img src="https://github.com/YangNaang2/Family_Stock_Portfolio_Manager/raw/main/images/%EC%A3%BC%EC%8B%9D%EC%88%98%EC%A0%95.png" width="45%" />
-  </p>
-
-### 🍰 자산 비중 시각화
-- Matplotlib 기반의 파이 차트를 통해 구성원별 포트폴리오 비중을 한눈에 파악.
-
-### 💾 데이터 영구 저장
-- 모든 데이터는 `family_stocks.json` 파일에 안전하게 기록되어 프로그램을 재시작해도 유지.
-
-### 🕒 실시간 동기화
-- 1초 단위 실시간 시계와 새로고침 기능을 통해 최신 금융 정보를 유지.
-
-## 🚀 시작하기
-
-### 필수 라이브러리 설치 후 실행
-터미널에서 아래 명령어를 입력하여 설치 후 실행.
+Python 3.12 이상을 권장합니다.
 
 ```bash
-pip install PyQt5 requests beautifulsoup4 matplotlib
+python -m venv .venv
+# Windows PowerShell: 아래 명령으로 활성화
+.venv\Scripts\Activate.ps1
+# macOS / Linux: 위 Windows 명령 대신 아래 명령 사용
+source .venv/bin/activate
+
+python -m pip install -r requirements.txt
 python main.py
 ```
+
+```bash
+python main.py --demo                     # 실제 파일·네트워크 없는 체험
+python main.py --data ./my_portfolio.json # 별도 데이터 파일
+python first.py                          # 터미널 메뉴
+```
+
+데모에는 가상의 거래, 목표 비중, 자산 변화 기록이 들어 있습니다. 데모의 변경은 종료하면 사라집니다. CSV와 JSON 백업은 직접 지정한 경로에 내보낼 수 있습니다.
+
+Linux에서는 Qt 실행용 그래픽 라이브러리와 한글 폰트가 필요할 수 있습니다. Ubuntu 예시:
+
+```bash
+sudo apt-get install libegl1 libgl1 fonts-noto-cjk
+```
+
+## 주요 기능
+
+| 기능 | 동작 |
+| --- | --- |
+| 가족별·전체 대시보드 | 매수원가, 평가액, 미실현손익, 수익률, 누적 실현손익, 순배당 |
+| 가족 관리 | 구성원 추가·이름 변경, 보유·거래 기록이 없는 가족 삭제 |
+| 보유 관리 | 추가 매수, 입력 오류 정정, 제거 이력 보관, 같은 코드 합산 |
+| 매도 기록 | 부분·전량 매도, 평균원가 배분, 수수료·세금 반영 |
+| 배당 기록 | 세전 배당과 원천징수, 순배당 합산, 전량 매도한 종목도 기록 가능 |
+| 거래 원장 | 기초 잔고·매수·매도·배당·정정·제거 기록, 검색·종류 필터·CSV |
+| 목표 비중 | 전체/가족별 목표 설정, 현재 비중과 차이를 %p로 비교 |
+| 자산 변화 | 날짜별 주식 평가액 기록, 원가·평가액 그래프, CSV |
+| 가격 알림 | 지정 가격 이상/이하 도달 시 앱 내 배너·소리 |
+| 시세 갱신 | 수동 또는 1·5·15분 간격, UI 중단 없이 최대 4개 동시 요청 |
+| 데이터 보관 | 원자적 저장, 이전 버전 `.bak`, 전체 JSON 백업·가져오기 |
+| 편의 기능 | 검색, 숫자 정렬, 자산 비중 차트, 금액 숨김, 단축키 |
+
+검색은 표에만 적용합니다. 대시보드 요약·비중·CSV는 선택한 가족의 전체 보유 내역 기준입니다. 거래 창의 검색·종류 필터도 표에만 적용하며, 거래 CSV에는 선택한 가족의 모든 기록이 들어갑니다.
+
+### 거래 기록
+
+![거래 기록 — 가상 데이터](images/activity-v3.png)
+
+1. **주식 추가**: 종목·수량·단가·매수 수수료·거래일·메모를 입력합니다. 같은 코드가 있으면 합산합니다.
+2. **매도 기록**: 표에서 종목을 선택하고 매도 수량·단가·비용을 입력합니다. 확인 전에 예상 실현손익을 보여줍니다. 실제 주문은 제출하지 않습니다.
+3. **배당 기록**: 보유 종목을 선택합니다. 전량 매도 후 받은 배당은 표 선택을 해제하고 버튼을 눌러 과거 거래 종목을 선택할 수 있습니다.
+4. **정보 수정/삭제**: 거래와 구분되는 정정·제거 이력을 남깁니다. 제거는 매도가 아니며 실현손익을 만들지 않습니다.
+
+- 매수 수수료는 보유 원가에 포함합니다.
+- 매도 실현손익 = 매도대금 − 매도 수수료 − 세금 − 평균원가로 배분한 매수원금.
+- 순배당 = 세전 배당 − 배당 세금. 매도 실현손익과 구분하여 표시합니다.
+- 정확한 총 원가를 Decimal 소수 문자열로 보존합니다. 부분 매도 후 남은 원가를 유지하고 마지막 매도가 잔여 원가를 모두 사용합니다.
+- 기존 파일의 보유분은 처음 거래 기능을 사용할 때 `초기 보유`로 등록됩니다. 해당 날짜는 이관일이며 과거 매수일을 추정한 값이 아닙니다.
+- 초기 보유를 제외한 같은 가족·종목의 거래는 날짜순으로 추가합니다. 같은 날짜는 입력 순서를 사용하며, 미래 날짜와 기존 거래보다 과거인 날짜는 거부합니다.
+- 과거 거래의 수정/삭제와 전체 원장의 소급 재계산은 지원하지 않습니다. 잘못 입력한 직후에는 이전 `.bak`을 가져와 복구할 수 있습니다. 이후 거래가 있다면 복구할 범위를 먼저 확인하세요.
+
+### 목표 비중과 자산 기록
+
+![목표 비중 — 가상 데이터](images/targets-v3.png)
+
+`목표 비중`에서 종목별 비율을 입력합니다. 합계는 100% 이하여야 합니다. 0%는 목표에서 제거하며, 미배정 비중은 실제 현금 잔액이 아닙니다. 시세가 하나라도 미확인·이전 값이면 비교 비중과 차이를 확정값으로 표시하지 않습니다.
+
+![자산 변화 — 가상 데이터](images/history-v3.png)
+
+`오늘 자산 기록`은 선택한 가족의 현재 주식 평가액을 저장합니다. 모든 보유 종목의 시세 조회가 성공해야 하며, 같은 날짜·가족의 기록은 최신 값으로 갱신합니다. **현금·입출금은 포함하지 않으므로 그래프의 증감이 투자 수익률을 뜻하지 않습니다.** 과거 시세를 자동으로 수집하는 기능은 아닙니다.
+
+### 알림과 단축키
+
+가격 알림은 앱이 실행 중이고 시세가 조회될 때만 확인합니다. 이전 시세나 미확인 값으로는 울리지 않습니다. 같은 조건이 유지되면 소리를 반복하지 않으며, 조건 해제 후 다시 도달하면 알립니다. 메신저·이메일·모바일 푸시를 발송하지 않습니다.
+
+| 단축키 | 기능 |
+| --- | --- |
+| Ctrl+R | 시세 새로고침 |
+| Ctrl+F | 종목 검색 |
+| Ctrl+N | 매수 기록 추가 |
+| Ctrl+E | 보유 CSV 내보내기 |
+| Ctrl+T | 거래 원장 열기 |
+
+금액 숨김은 **대시보드의 금액·수량만** 가립니다. 별도 다이얼로그와 CSV/JSON에는 원래 값이 포함됩니다. 자동 조회 간격과 숨김 상태는 이번 실행 세션에 적용됩니다.
+
+## 시세와 계산 범위
+
+국내 6자리 종목코드와 원화 금액을 지원합니다. [네이버 종목 응답](https://polling.finance.naver.com/api/realtime/domestic/stock/005930), [시장 지수](https://polling.finance.naver.com/api/realtime/domestic/index/KOSPI,KOSDAQ), [환율](https://api.stock.naver.com/marketindex/exchange/FX_USDKRW)을 사용합니다. 장기 호환이 보장된 계약 API는 아니므로 공급자 변경에 따라 조회가 실패할 수 있습니다.
+
+조회 실패 시 같은 실행 세션의 이전 성공값을 유지하고 `이전 시세`로 표시합니다. 한 번도 조회하지 못한 종목은 평가액·미실현손익·수익률·차트에서 제외합니다. 총 매수원가는 유지하고 일부 합계임을 표시합니다. 모든 가격이 미확인이면 평가 지표는 `—`입니다.
+
+미실현 수익률은 **조회된 종목의 평가손익 ÷ 같은 종목들의 보유 원가**입니다. 예상 매도 수수료·세금은 반영하지 않습니다. 시세 상태에 마우스를 올리면 앱의 성공 조회 시각과 전일 대비를 볼 수 있습니다. 이 시각은 거래소 체결 시각과 다릅니다.
+
+연결/읽기 타임아웃은 3초/5초이며 재시도하지 않습니다. DNS 등 전체 소요 시간의 엄밀한 상한은 아닙니다. 조회 중 종료 시 진행 중인 요청을 정리한 뒤 창을 닫습니다.
+
+## 데이터 형식과 복구
+
+기본 파일은 프로그램과 같은 폴더의 `family_stocks.json`입니다. 실행한 작업 폴더와 무관합니다. `--data` 또는 `FAMILY_STOCK_DATA_FILE` 환경 변수로 바꿀 수 있습니다. 파일이 없으면 빈 가족 목록으로 시작합니다.
+
+기존 `가족 이름 → 종목 배열` JSON을 그대로 읽습니다. 거래·목표·기록·알림을 사용하면 다음의 버전 2 형식으로 저장합니다.
+
+```json
+{
+  "schema_version": 2,
+  "members": {"나": []},
+  "metadata": {
+    "transactions": [], "ledger_initialized": false,
+    "targets": {}, "snapshots": [], "alerts": []
+  }
+}
+```
+
+저장할 기존 파일이 있으면 바로 이전 정상 내용이 `<파일명>.bak`에 남습니다. 백업은 한 세대이며 거래와 설정도 포함합니다. `데이터 · 가족 → 전체 JSON 백업`으로 별도 백업을 만들 수 있습니다. `JSON 가져오기 / 복구`는 내용을 검증한 뒤 확인을 거쳐 현재 전체 데이터를 교체합니다. 손상 파일이나 알 수 없는 버전은 초기화하거나 덮어쓰지 않습니다.
+
+외부 프로그램이 파일을 변경했으면 저장을 중단합니다. 완전한 다중 프로세스 잠금은 아니므로 한 파일에는 한 앱을 사용하세요. 개별 수량은 20억 주, 단가는 1조 원까지 검증합니다.
+
+실제 보유 파일은 Git 추적에서 제외하고 빈 `family_stocks.example.json`만 제공합니다. 이전 커밋의 Git 이력은 다시 쓰지 않았습니다.
+
+## 개발 및 검증
+
+```bash
+# Linux / macOS
+QT_QPA_PLATFORM=offscreen python -m unittest discover -s tests -v
+
+# Windows PowerShell
+$env:QT_QPA_PLATFORM = 'offscreen'
+python -m unittest discover -s tests -v
+```
+
+테스트는 임시 파일과 가짜 시세를 사용합니다. 계산·이관·원장·목표·알림·백업·GUI·작업자 동작을 검증합니다. GitHub Actions는 Python 3.12와 3.13에서 실행합니다.
+
+```text
+main.py / first.py    # 데스크톱 / 터미널 진입점
+feature_ui.py         # 거래·목표·알림·자산 기록 다이얼로그
+portfolio.py          # 정확한 보유 평가와 CSV
+trading.py            # 매수·매도·배당·정정 원장
+analytics.py          # 목표 비중·자산 기록·가격 알림·가족 관리
+data_manager.py      # 구형/버전2 파일 검증·원자적 저장·백업
+scraper.py           # 네이버 시세 공급자
+tests/               # 외부 네트워크 없는 회귀 테스트
+```
+
+설계 배경과 구현 과정은 [CHANGELOG.md](CHANGELOG.md), 재사용할 개발 프롬프트는 [UPGRADE_PROMPT.md](UPGRADE_PROMPT.md)에 있습니다.

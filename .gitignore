@@ -1,1 +1,15 @@
 __pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mplconfig/
+family_stocks.json
+family_stocks.json.bak
+*.tmp
+portfolio_*.csv
+transactions_*.csv
+history_*.csv
+family_backup_*.json
+family_backup_*.json.bak
+dist/
+build/
