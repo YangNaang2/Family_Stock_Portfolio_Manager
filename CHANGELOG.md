@@ -1,3 +1,13 @@
+# 개선 기록 · 2026-10-16
+
+기준 커밋: `e4499c8`
+
+- 화면과 차트 글꼴을 저장소에 포함한 Pretendard(SIL OFL)로 통일. Windows의 Qt 5 GDI 엔진은 OTF(CFF) 한글을 작은 크기에서 흐리게 그려 TrueType 버전을 사용.
+- 글꼴 설정을 `typography.py`로 분리하고, 자산 기록 창이 메인 창 없이 열려도 한글 글꼴을 설정. 전체 테스트의 차트 글리프 누락 경고 7건 제거.
+- 테스트에서 JSON을 UTF-8로 읽도록 수정. Windows 기본 인코딩(cp949)에서 실패하던 2건 해결.
+- README에 한글 경로에서 PyQt5가 시작되지 않는 문제와 영문 경로 가상환경 안내 추가.
+- 검증: Windows / Python 3.11 / PyQt5 5.15.11에서 회귀 테스트 130개 통과, 실제 Windows 플랫폼으로 대시보드 렌더링 확인.
+
 # 개선 기록 · 2026-09-29
 
 기준 저장소: https://github.com/YangNaang2/Family_Stock_Portfolio_Manager

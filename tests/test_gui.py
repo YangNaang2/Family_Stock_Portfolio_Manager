@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
 
 from data_manager import DataError, load_data, save_data
 import main
+import typography
 
 
 def sample_data():
@@ -84,6 +85,23 @@ class StockAppTests(unittest.TestCase):
             window.quotes = sample_quotes()
             window.render()
         return window
+
+    def test_bundled_pretendard_is_used_for_widgets_and_charts(self):
+        window = self.window(demo=True)
+        self.assertEqual(self.qtapp.font().family(), "Pretendard")
+        self.assertEqual(window.font().family(), "Pretendard")
+        self.assertEqual(typography.rcParams["font.family"], ["Pretendard"])
+
+    def test_missing_bundled_fonts_fall_back_to_a_system_font(self):
+        original = self.qtapp.font()
+        self.addCleanup(self.qtapp.setFont, original)
+        with tempfile.TemporaryDirectory() as empty, mock.patch("typography.FONT_DIR", Path(empty)), \
+                mock.patch("typography.FONT_FAMILIES", ("No Such Font", "Malgun Gothic", "DejaVu Sans")):
+            family = typography.configure_fonts()
+        self.assertIn(family, ("Malgun Gothic", "DejaVu Sans", None))
+        if family:
+            self.assertEqual(self.qtapp.font().family(), family)
+        typography.configure_fonts()
 
     def close_windows(self):
         for window in self.windows:

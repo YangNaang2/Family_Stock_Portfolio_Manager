@@ -228,7 +228,7 @@ class DataManagerTests(unittest.TestCase):
         first.metadata["targets"]["나"] = {"005930": "50"}
         self.assertEqual(second.metadata["targets"], {})
         save_data(second, self.path)
-        self.assertEqual(json.loads(self.path.read_text()), {"나": []})
+        self.assertEqual(json.loads(self.path.read_text(encoding="utf-8")), {"나": []})
         loaded = load_data(self.path)
         self.assertIsInstance(loaded, PortfolioData)
         self.assertEqual(loaded.metadata, second.metadata)
@@ -240,7 +240,7 @@ class DataManagerTests(unittest.TestCase):
         data.metadata["targets"]["*"] = {"005930": "80.5", "000660": "19.5"}
         data.metadata["alerts"].append({"id": "alert-1", "code": "005930", "direction": "above", "price": "75000.1"})
         save_data(data, self.path)
-        stored = json.loads(self.path.read_text())
+        stored = json.loads(self.path.read_text(encoding="utf-8"))
         self.assertEqual(stored["schema_version"], 2)
         self.assertEqual(stored["members"], {"나": [holding()]})
         self.assertEqual(self.backup.read_bytes(), old_bytes)

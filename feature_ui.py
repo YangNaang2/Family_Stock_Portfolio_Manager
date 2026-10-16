@@ -22,6 +22,7 @@ from matplotlib.ticker import FuncFormatter
 from analytics import allocation_rows, get_targets
 from portfolio import MAX_COST, MAX_PRICE, MAX_QUANTITY, build_snapshot
 from trading import export_transactions_csv, summarize_activity
+from typography import configure_fonts
 
 
 TYPE_LABELS = {
@@ -453,6 +454,8 @@ class HistoryDialog(QDialog):
         layout = QVBoxLayout(self)
         layout.addWidget(_label(f"{'가족 전체' if member is None else member} · 저장한 날짜별 주식 자산"))
         layout.addWidget(_label("주식 평가금액만 기록합니다. 현금·입출금은 포함되지 않아 그래프 변화가 투자 수익률을 뜻하지 않습니다. 같은 날짜의 기록은 마지막 저장값을 표시합니다."))
+        # The dialog can open without the main window (tests, reuse); set Korean fonts itself.
+        configure_fonts()
         self.figure = Figure(figsize=(8, 3), facecolor="white")
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas, 1)

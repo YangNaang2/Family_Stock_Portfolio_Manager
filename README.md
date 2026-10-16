@@ -30,10 +30,20 @@ python first.py                          # 터미널 메뉴
 
 데모에는 가상의 거래, 목표 비중, 자산 변화 기록이 들어 있습니다. 데모의 변경은 종료하면 사라집니다. CSV와 JSON 백업은 직접 지정한 경로에 내보낼 수 있습니다.
 
-Linux에서는 Qt 실행용 그래픽 라이브러리와 한글 폰트가 필요할 수 있습니다. Ubuntu 예시:
+화면과 차트에는 저장소에 포함한 [Pretendard](https://github.com/orioncactus/pretendard)(SIL Open Font License, `fonts/OFL-Pretendard.txt`)를 사용하므로 글꼴을 따로 설치하지 않아도 됩니다. 글꼴 파일을 불러오지 못하면 맑은 고딕 등 시스템 한글 글꼴로 대체합니다.
+
+**Windows:** PyQt5는 경로에 한글 등 비영문 문자가 있으면 Qt 플러그인을 불러오지 못해 "no Qt platform plugin could be initialized" 오류로 시작하지 않습니다. 프로젝트가 `바탕화면\설치\...`처럼 한글 경로에 있다면 가상환경만 영문 경로에 만드세요. Windows / Python 3.11에서도 전체 테스트를 확인했습니다.
+
+```powershell
+py -m venv $HOME\.venvs\family-folio
+& $HOME\.venvs\family-folio\Scripts\python.exe -m pip install -r requirements.txt
+& $HOME\.venvs\family-folio\Scripts\python.exe main.py --demo
+```
+
+Linux에서는 Qt 실행용 그래픽 라이브러리가 필요할 수 있습니다. Ubuntu 예시:
 
 ```bash
-sudo apt-get install libegl1 libgl1 fonts-noto-cjk
+sudo apt-get install libegl1 libgl1
 ```
 
 ## 주요 기능
@@ -150,6 +160,8 @@ trading.py            # 매수·매도·배당·정정 원장
 analytics.py          # 목표 비중·자산 기록·가격 알림·가족 관리
 data_manager.py      # 구형/버전2 파일 검증·원자적 저장·백업
 scraper.py           # 네이버 시세 공급자
+typography.py        # 화면·차트 공통 글꼴(Pretendard) 설정
+fonts/               # Pretendard Regular·Bold TTF와 라이선스
 tests/               # 외부 네트워크 없는 회귀 테스트
 ```
 

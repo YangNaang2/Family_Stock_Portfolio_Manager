@@ -15,7 +15,6 @@ from PyQt5.QtWidgets import (
     QLabel, QLineEdit, QMenu, QMessageBox, QPushButton, QShortcut, QTableWidget,
     QTableWidgetItem, QToolButton, QVBoxLayout, QWidget,
 )
-from matplotlib import font_manager, rcParams
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -25,18 +24,11 @@ from trading import record_buy, record_sell, record_dividend, correct_holding, r
 from analytics import add_snapshot, set_targets, set_alert, remove_alert, check_alerts, rename_member, remove_member
 from feature_ui import TradeDialog, ActivityDialog, TargetsDialog, AlertDialog, HistoryDialog
 from scraper import get_current_price, get_market_info
+from typography import configure_fonts
 
 COLORS = ["#287d70", "#77afa2", "#d3b77d", "#8c9aba", "#c8d7cd", "#c6c1b6"]
 UP, DOWN, MUTED = "#bd5146", "#326baf", "#78827f"
 
-
-def configure_fonts():
-    available = {font.name for font in font_manager.fontManager.ttflist}
-    for name in ("Malgun Gothic", "AppleGothic", "Noto Sans CJK JP", "NanumGothic", "DejaVu Sans"):
-        if name in available:
-            rcParams["font.family"] = name
-            break
-    rcParams["axes.unicode_minus"] = False
 
 
 def money(value, decimals=0):
